@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import tacos.TacoOrder;
 
 import org.springframework.validation.Errors;
+import tacos.data.OrderRepository;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,12 @@ import javax.validation.Valid;
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
 public class OrderController {
+
+    private OrderRepository orderRepo;
+
+    public OrderController(OrderRepository orderRepo) {
+        this.orderRepo = orderRepo;
+    }
 
     @GetMapping("/current")
     public String orderForm() {
@@ -32,6 +39,7 @@ public class OrderController {
             return "orderForm";
         }
 
+        orderRepo.save(order);
         log.info("Order submitted: {}", order);
         sessionStatus.setComplete();
 
